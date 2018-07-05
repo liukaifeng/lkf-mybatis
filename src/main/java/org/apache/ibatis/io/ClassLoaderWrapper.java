@@ -21,6 +21,7 @@ import java.net.URL;
 /**
  * 该类封装了多个类加载器，统一了使用入口
  *
+ * @author kaifeng
  * @author Clinton Begin
  */
 public class ClassLoaderWrapper {
