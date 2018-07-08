@@ -55,7 +55,7 @@ public class Resources {
         return classLoaderWrapper.defaultClassLoader;
     }
 
-    /*
+    /**
      * 设置默认类加载器
      *
      * @param defaultClassLoader - 新的默认类加载器
@@ -190,31 +190,31 @@ public class Resources {
     /**
      * 以File对象的格式返回资源
      *
-     * @param resource The resource to find
-     * @return The resource
+     * @param resource 需要被加载的资源
+     * @return 返回资源
      * @throws java.io.IOException If the resource cannot be found or read
      */
     public static File getResourceAsFile(String resource) throws IOException {
         return new File(getResourceURL(resource).getFile());
     }
 
-    /*
-     * Returns a resource on the classpath as a File object
+    /**
+     * 返回指定classpath的资源并将它转换为 File 对象
      *
-     * @param loader   - the classloader used to fetch the resource
-     * @param resource - the resource to find
-     * @return The resource
+     * @param loader   - 加载资源的类加载器
+     * @param resource - 需要被加载的资源
+     * @return 返回 File 对象资源
      * @throws java.io.IOException If the resource cannot be found or read
      */
     public static File getResourceAsFile(ClassLoader loader, String resource) throws IOException {
         return new File(getResourceURL(loader, resource).getFile());
     }
 
-    /*
-     * Gets a URL as an input stream
+    /**
+     * 根据资源URL地址获取该资源的InputStream对象
      *
-     * @param urlString - the URL to get
-     * @return An input stream with the data from the URL
+     * @param urlString - 资源URL地址
+     * @return URL地址资源的InputStream对象
      * @throws java.io.IOException If the resource cannot be found or read
      */
     public static InputStream getUrlAsStream(String urlString) throws IOException {
@@ -223,11 +223,11 @@ public class Resources {
         return conn.getInputStream();
     }
 
-    /*
-     * Gets a URL as a Reader
+    /**
+     * 根据资源URL地址获取该资源的Reader对象
      *
-     * @param urlString - the URL to get
-     * @return A Reader with the data from the URL
+     * @param urlString - 资源的URL地址
+     * @return URL地址资源的Reader对象
      * @throws java.io.IOException If the resource cannot be found or read
      */
     public static Reader getUrlAsReader(String urlString) throws IOException {
@@ -240,11 +240,11 @@ public class Resources {
         return reader;
     }
 
-    /*
-     * Gets a URL as a Properties object
+    /**
+     * 根据资源URL地址获取该资源的 Properties 对象
      *
-     * @param urlString - the URL to get
-     * @return A Properties object with the data from the URL
+     * @param urlString - 资源的URL地址
+     * @return URL地址资源转换成 Properties 对象
      * @throws java.io.IOException If the resource cannot be found or read
      */
     public static Properties getUrlAsProperties(String urlString) throws IOException {
@@ -256,10 +256,10 @@ public class Resources {
     }
 
     /*
-     * Loads a class
+     * 加载一个类
      *
-     * @param className - the class to fetch
-     * @return The loaded class
+     * @param className - 类名
+     * @return 加载的class对象
      * @throws ClassNotFoundException If the class cannot be found (duh!)
      */
     public static Class<?> classForName(String className) throws ClassNotFoundException {

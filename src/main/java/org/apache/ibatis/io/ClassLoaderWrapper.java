@@ -43,6 +43,8 @@ public class ClassLoaderWrapper {
         }
     }
 
+    //region getResourceAsURL 方法重载
+
     /**
      * 使用当前类路径获取资源作为URL
      *
@@ -63,6 +65,9 @@ public class ClassLoaderWrapper {
     public URL getResourceAsURL(String resource, ClassLoader classLoader) {
         return getResourceAsURL(resource, getClassLoaders(classLoader));
     }
+    //endregion
+
+    //region getResourceAsStream 方法重载
 
     /**
      * 从指定路径获取资源
@@ -84,6 +89,9 @@ public class ClassLoaderWrapper {
     public InputStream getResourceAsStream(String resource, ClassLoader classLoader) {
         return getResourceAsStream(resource, getClassLoaders(classLoader));
     }
+    //endregion
+
+    //region classForName 方法重载
 
     /**
      * 根据类名查找类对象
@@ -107,6 +115,7 @@ public class ClassLoaderWrapper {
     public Class<?> classForName(String name, ClassLoader classLoader) throws ClassNotFoundException {
         return classForName(name, getClassLoaders(classLoader));
     }
+    //endregion
 
     /**
      * 根据指定的资源路径，尝试使用各种类加载器查找资源
@@ -207,7 +216,14 @@ public class ClassLoaderWrapper {
     }
 
     /**
-     * 构造类加载器数组
+     * 构造类加载器数组，指定了类加载器的使用顺序
+     * <p>
+     * classLoader 指定的类加载器
+     * defaultClassLoader 指定的默认类加载器
+     * Thread.currentThread().getContextClassLoader() 当前线程绑定的类加载器
+     * getClass().getClassLoader() 加载当前类所使用的类加载器
+     * systemClassLoader 系统类加载器
+     * </p>
      *
      * @param classLoader 类加载器
      */
