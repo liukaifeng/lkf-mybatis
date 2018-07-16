@@ -45,11 +45,13 @@ public class UnpooledDataSourceFactory implements DataSourceFactory {
         //遍历properties集合，该集合中有数据源需要的属性
         for (Object key : properties.keySet()) {
             String propertyName = (String) key;
+            //以driver.开头的属性放入driverProperties中
             if (propertyName.startsWith(DRIVER_PROPERTY_PREFIX)) {
                 String value = properties.getProperty(propertyName);
                 driverProperties.setProperty(propertyName.substring(DRIVER_PROPERTY_PREFIX_LENGTH), value);
             } else if (metaDataSource.hasSetter(propertyName)) {
                 String value = (String) properties.get(propertyName);
+                //类型转换
                 Object convertedValue = convertValue(metaDataSource, propertyName, value);
                 metaDataSource.setValue(propertyName, convertedValue);
             } else {
@@ -66,6 +68,9 @@ public class UnpooledDataSourceFactory implements DataSourceFactory {
         return dataSource;
     }
 
+    /**
+     * 类型转换，只支持三种类型转换，分别是Integer、Long、Boolean
+     */
     private Object convertValue( MetaObject metaDataSource, String propertyName, String value ) {
         Object convertedValue = value;
         Class<?> targetType = metaDataSource.getSetterType(propertyName);
