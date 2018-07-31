@@ -320,6 +320,7 @@ public class XMLConfigBuilder extends BaseBuilder {
 
   private DataSourceFactory dataSourceElement(XNode context) throws Exception {
     if (context != null) {
+      //获取数据库连接池类型： POOLED-使用Mybatis自带数据库连接池。UNPOOL-不使用数据库连接池
       String type = context.getStringAttribute("type");
       Properties props = context.getChildrenAsProperties();
       DataSourceFactory factory = (DataSourceFactory) resolveClass(type).newInstance();

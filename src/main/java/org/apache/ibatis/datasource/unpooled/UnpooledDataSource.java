@@ -29,6 +29,7 @@ import java.util.logging.Logger;
 /**
  * 不使用连接池的数据源
  *
+ * @author kaifeng
  * @author Clinton Begin
  * @author Eduardo Macarron
  */
@@ -85,20 +86,20 @@ public class UnpooledDataSource implements DataSource {
     public UnpooledDataSource() {
     }
 
-    public UnpooledDataSource( String driver, String url, String username, String password ) {
+    public UnpooledDataSource(String driver, String url, String username, String password) {
         this.driver = driver;
         this.url = url;
         this.username = username;
         this.password = password;
     }
 
-    public UnpooledDataSource( String driver, String url, Properties driverProperties ) {
+    public UnpooledDataSource(String driver, String url, Properties driverProperties) {
         this.driver = driver;
         this.url = url;
         this.driverProperties = driverProperties;
     }
 
-    public UnpooledDataSource( ClassLoader driverClassLoader, String driver, String url, String username, String password ) {
+    public UnpooledDataSource(ClassLoader driverClassLoader, String driver, String url, String username, String password) {
         this.driverClassLoader = driverClassLoader;
         this.driver = driver;
         this.url = url;
@@ -106,7 +107,7 @@ public class UnpooledDataSource implements DataSource {
         this.password = password;
     }
 
-    public UnpooledDataSource( ClassLoader driverClassLoader, String driver, String url, Properties driverProperties ) {
+    public UnpooledDataSource(ClassLoader driverClassLoader, String driver, String url, Properties driverProperties) {
         this.driverClassLoader = driverClassLoader;
         this.driver = driver;
         this.url = url;
@@ -128,12 +129,12 @@ public class UnpooledDataSource implements DataSource {
      * @param password 密码
      */
     @Override
-    public Connection getConnection( String username, String password ) throws SQLException {
+    public Connection getConnection(String username, String password) throws SQLException {
         return doGetConnection(username, password);
     }
 
     @Override
-    public void setLoginTimeout( int loginTimeout ) throws SQLException {
+    public void setLoginTimeout(int loginTimeout) throws SQLException {
         DriverManager.setLoginTimeout(loginTimeout);
     }
 
@@ -143,7 +144,7 @@ public class UnpooledDataSource implements DataSource {
     }
 
     @Override
-    public void setLogWriter( PrintWriter logWriter ) throws SQLException {
+    public void setLogWriter(PrintWriter logWriter) throws SQLException {
         DriverManager.setLogWriter(logWriter);
     }
 
@@ -156,7 +157,7 @@ public class UnpooledDataSource implements DataSource {
         return driverClassLoader;
     }
 
-    public void setDriverClassLoader( ClassLoader driverClassLoader ) {
+    public void setDriverClassLoader(ClassLoader driverClassLoader) {
         this.driverClassLoader = driverClassLoader;
     }
 
@@ -164,7 +165,7 @@ public class UnpooledDataSource implements DataSource {
         return driverProperties;
     }
 
-    public void setDriverProperties( Properties driverProperties ) {
+    public void setDriverProperties(Properties driverProperties) {
         this.driverProperties = driverProperties;
     }
 
@@ -172,7 +173,7 @@ public class UnpooledDataSource implements DataSource {
         return driver;
     }
 
-    public synchronized void setDriver( String driver ) {
+    public synchronized void setDriver(String driver) {
         this.driver = driver;
     }
 
@@ -180,7 +181,7 @@ public class UnpooledDataSource implements DataSource {
         return url;
     }
 
-    public void setUrl( String url ) {
+    public void setUrl(String url) {
         this.url = url;
     }
 
@@ -188,7 +189,7 @@ public class UnpooledDataSource implements DataSource {
         return username;
     }
 
-    public void setUsername( String username ) {
+    public void setUsername(String username) {
         this.username = username;
     }
 
@@ -196,7 +197,7 @@ public class UnpooledDataSource implements DataSource {
         return password;
     }
 
-    public void setPassword( String password ) {
+    public void setPassword(String password) {
         this.password = password;
     }
 
@@ -204,7 +205,7 @@ public class UnpooledDataSource implements DataSource {
         return autoCommit;
     }
 
-    public void setAutoCommit( Boolean autoCommit ) {
+    public void setAutoCommit(Boolean autoCommit) {
         this.autoCommit = autoCommit;
     }
 
@@ -212,7 +213,7 @@ public class UnpooledDataSource implements DataSource {
         return defaultTransactionIsolationLevel;
     }
 
-    public void setDefaultTransactionIsolationLevel( Integer defaultTransactionIsolationLevel ) {
+    public void setDefaultTransactionIsolationLevel(Integer defaultTransactionIsolationLevel) {
         this.defaultTransactionIsolationLevel = defaultTransactionIsolationLevel;
     }
 
@@ -222,7 +223,7 @@ public class UnpooledDataSource implements DataSource {
      * @param username 用户名
      * @param password 密码
      */
-    private Connection doGetConnection( String username, String password ) throws SQLException {
+    private Connection doGetConnection(String username, String password) throws SQLException {
         Properties props = new Properties();
         if (driverProperties != null) {
             props.putAll(driverProperties);
@@ -241,7 +242,7 @@ public class UnpooledDataSource implements DataSource {
      *
      * @param properties 配置属性
      */
-    private Connection doGetConnection( Properties properties ) throws SQLException {
+    private Connection doGetConnection(Properties properties) throws SQLException {
         //初始化数据源连接驱动
         initializeDriver();
         //从DriverManager中获取数据库连接
@@ -283,7 +284,7 @@ public class UnpooledDataSource implements DataSource {
      *
      * @param conn 数据源连接对象
      */
-    private void configureConnection( Connection conn ) throws SQLException {
+    private void configureConnection(Connection conn) throws SQLException {
         //设置是否自动提交事务
         if (autoCommit != null && autoCommit != conn.getAutoCommit()) {
             conn.setAutoCommit(autoCommit);
@@ -300,17 +301,17 @@ public class UnpooledDataSource implements DataSource {
     private static class DriverProxy implements Driver {
         private Driver driver;
 
-        DriverProxy( Driver d ) {
+        DriverProxy(Driver d) {
             this.driver = d;
         }
 
         @Override
-        public boolean acceptsURL( String u ) throws SQLException {
+        public boolean acceptsURL(String u) throws SQLException {
             return this.driver.acceptsURL(u);
         }
 
         @Override
-        public Connection connect( String u, Properties p ) throws SQLException {
+        public Connection connect(String u, Properties p) throws SQLException {
             return this.driver.connect(u, p);
         }
 
@@ -325,7 +326,7 @@ public class UnpooledDataSource implements DataSource {
         }
 
         @Override
-        public DriverPropertyInfo[] getPropertyInfo( String u, Properties p ) throws SQLException {
+        public DriverPropertyInfo[] getPropertyInfo(String u, Properties p) throws SQLException {
             return this.driver.getPropertyInfo(u, p);
         }
 
@@ -341,12 +342,12 @@ public class UnpooledDataSource implements DataSource {
     }
 
     @Override
-    public <T> T unwrap( Class<T> iface ) throws SQLException {
+    public <T> T unwrap(Class<T> iface) throws SQLException {
         throw new SQLException(getClass().getName() + " is not a wrapper.");
     }
 
     @Override
-    public boolean isWrapperFor( Class<?> iface ) throws SQLException {
+    public boolean isWrapperFor(Class<?> iface) throws SQLException {
         return false;
     }
 

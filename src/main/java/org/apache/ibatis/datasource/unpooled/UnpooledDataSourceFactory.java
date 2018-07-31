@@ -24,6 +24,7 @@ import javax.sql.DataSource;
 import java.util.Properties;
 
 /**
+ * @author kaifeng
  * @author Clinton Begin
  */
 public class UnpooledDataSourceFactory implements DataSourceFactory {
@@ -38,7 +39,7 @@ public class UnpooledDataSourceFactory implements DataSourceFactory {
     }
 
     @Override
-    public void setProperties( Properties properties ) {
+    public void setProperties(Properties properties) {
         Properties driverProperties = new Properties();
         //创建DataSource相应的MetaObject对象
         MetaObject metaDataSource = SystemMetaObject.forObject(dataSource);
@@ -71,7 +72,7 @@ public class UnpooledDataSourceFactory implements DataSourceFactory {
     /**
      * 类型转换，只支持三种类型转换，分别是Integer、Long、Boolean
      */
-    private Object convertValue( MetaObject metaDataSource, String propertyName, String value ) {
+    private Object convertValue(MetaObject metaDataSource, String propertyName, String value) {
         Object convertedValue = value;
         Class<?> targetType = metaDataSource.getSetterType(propertyName);
         if (targetType == Integer.class || targetType == int.class) {

@@ -28,23 +28,7 @@ import java.util.Properties;
 import java.util.logging.Logger;
 
 /**
- * 这是一个简单的,同步的,线程安全的数据库连接池
- * https://www.jianshu.com/p/f37f9a63fa64
- * <p>
- * <dataSource type="POOLED">
- * <property name="driver" value="${jdbc.driver}" />
- * <property name="url" value="${jdbc.url}" />
- * <property name="username" value="${jdbc.username}" />
- * <property name="password" value="${jdbc.password}" />
- * <property name="poolMaximumActiveConnections" value="20" />
- * <property name="poolMaximumIdleConnections" value="10" />
- * <property name="poolMaximumCheckoutTime" value="15" />
- * <property name="poolTimeToWait" value="10" />
- * <property name="poolPingQuery" value="select 1 from dual" />
- * <property name="poolPingEnabled" value="true" />
- * <property name="poolPingConnectionsNotUsedFor" value="0" />
- * </dataSource>
- * </p>
+ * Mybatis默认数据库连接池
  *
  * @author kaifeng
  * @author Clinton Begin
@@ -106,26 +90,26 @@ public class PooledDataSource implements DataSource {
         dataSource = new UnpooledDataSource();
     }
 
-    public PooledDataSource( UnpooledDataSource dataSource ) {
+    public PooledDataSource(UnpooledDataSource dataSource) {
         this.dataSource = dataSource;
     }
 
-    public PooledDataSource( String driver, String url, String username, String password ) {
+    public PooledDataSource(String driver, String url, String username, String password) {
         dataSource = new UnpooledDataSource(driver, url, username, password);
         expectedConnectionTypeCode = assembleConnectionTypeCode(dataSource.getUrl(), dataSource.getUsername(), dataSource.getPassword());
     }
 
-    public PooledDataSource( String driver, String url, Properties driverProperties ) {
+    public PooledDataSource(String driver, String url, Properties driverProperties) {
         dataSource = new UnpooledDataSource(driver, url, driverProperties);
         expectedConnectionTypeCode = assembleConnectionTypeCode(dataSource.getUrl(), dataSource.getUsername(), dataSource.getPassword());
     }
 
-    public PooledDataSource( ClassLoader driverClassLoader, String driver, String url, String username, String password ) {
+    public PooledDataSource(ClassLoader driverClassLoader, String driver, String url, String username, String password) {
         dataSource = new UnpooledDataSource(driverClassLoader, driver, url, username, password);
         expectedConnectionTypeCode = assembleConnectionTypeCode(dataSource.getUrl(), dataSource.getUsername(), dataSource.getPassword());
     }
 
-    public PooledDataSource( ClassLoader driverClassLoader, String driver, String url, Properties driverProperties ) {
+    public PooledDataSource(ClassLoader driverClassLoader, String driver, String url, Properties driverProperties) {
         dataSource = new UnpooledDataSource(driverClassLoader, driver, url, driverProperties);
         expectedConnectionTypeCode = assembleConnectionTypeCode(dataSource.getUrl(), dataSource.getUsername(), dataSource.getPassword());
     }
@@ -136,12 +120,12 @@ public class PooledDataSource implements DataSource {
     }
 
     @Override
-    public Connection getConnection( String username, String password ) throws SQLException {
+    public Connection getConnection(String username, String password) throws SQLException {
         return popConnection(username, password).getProxyConnection();
     }
 
     @Override
-    public void setLoginTimeout( int loginTimeout ) throws SQLException {
+    public void setLoginTimeout(int loginTimeout) throws SQLException {
         DriverManager.setLoginTimeout(loginTimeout);
     }
 
@@ -151,7 +135,7 @@ public class PooledDataSource implements DataSource {
     }
 
     @Override
-    public void setLogWriter( PrintWriter logWriter ) throws SQLException {
+    public void setLogWriter(PrintWriter logWriter) throws SQLException {
         DriverManager.setLogWriter(logWriter);
     }
 
@@ -160,123 +144,121 @@ public class PooledDataSource implements DataSource {
         return DriverManager.getLogWriter();
     }
 
-    public void setDriver( String driver ) {
+    public void setDriver(String driver) {
         dataSource.setDriver(driver);
         forceCloseAll();
     }
 
-    public void setUrl( String url ) {
+    public void setUrl(String url) {
         dataSource.setUrl(url);
         forceCloseAll();
     }
 
-    public void setUsername( String username ) {
+    public void setUsername(String username) {
         dataSource.setUsername(username);
         forceCloseAll();
     }
 
-    public void setPassword( String password ) {
+    public void setPassword(String password) {
         dataSource.setPassword(password);
         forceCloseAll();
     }
 
-    public void setDefaultAutoCommit( boolean defaultAutoCommit ) {
+    public void setDefaultAutoCommit(boolean defaultAutoCommit) {
         dataSource.setAutoCommit(defaultAutoCommit);
         forceCloseAll();
     }
 
-    public void setDefaultTransactionIsolationLevel( Integer defaultTransactionIsolationLevel ) {
+    public void setDefaultTransactionIsolationLevel(Integer defaultTransactionIsolationLevel) {
         dataSource.setDefaultTransactionIsolationLevel(defaultTransactionIsolationLevel);
         forceCloseAll();
     }
 
-    public void setDriverProperties( Properties driverProps ) {
+    public void setDriverProperties(Properties driverProps) {
         dataSource.setDriverProperties(driverProps);
         forceCloseAll();
     }
 
-    /*
+    /**
      * The maximum number of active connections
      *
      * @param poolMaximumActiveConnections The maximum number of active connections
      */
-    public void setPoolMaximumActiveConnections( int poolMaximumActiveConnections ) {
+    public void setPoolMaximumActiveConnections(int poolMaximumActiveConnections) {
         this.poolMaximumActiveConnections = poolMaximumActiveConnections;
         forceCloseAll();
     }
 
-    /*
+    /**
      * The maximum number of idle connections
      *
      * @param poolMaximumIdleConnections The maximum number of idle connections
      */
-    public void setPoolMaximumIdleConnections( int poolMaximumIdleConnections ) {
+    public void setPoolMaximumIdleConnections(int poolMaximumIdleConnections) {
         this.poolMaximumIdleConnections = poolMaximumIdleConnections;
         forceCloseAll();
     }
 
-    /*
+    /**
      * The maximum number of tolerance for bad connection happens in one thread
-      * which are applying for new {@link PooledConnection}
+     * which are applying for new {@link PooledConnection}
      *
-     * @param poolMaximumLocalBadConnectionTolerance
-     * max tolerance for bad connection happens in one thread
-     *
+     * @param poolMaximumLocalBadConnectionTolerance max tolerance for bad connection happens in one thread
      * @since 3.4.5
      */
     public void setPoolMaximumLocalBadConnectionTolerance(
-            int poolMaximumLocalBadConnectionTolerance ) {
+            int poolMaximumLocalBadConnectionTolerance) {
         this.poolMaximumLocalBadConnectionTolerance = poolMaximumLocalBadConnectionTolerance;
     }
 
-    /*
+    /**
      * The maximum time a connection can be used before it *may* be
      * given away again.
      *
      * @param poolMaximumCheckoutTime The maximum time
      */
-    public void setPoolMaximumCheckoutTime( int poolMaximumCheckoutTime ) {
+    public void setPoolMaximumCheckoutTime(int poolMaximumCheckoutTime) {
         this.poolMaximumCheckoutTime = poolMaximumCheckoutTime;
         forceCloseAll();
     }
 
-    /*
+    /**
      * The time to wait before retrying to get a connection
      *
      * @param poolTimeToWait The time to wait
      */
-    public void setPoolTimeToWait( int poolTimeToWait ) {
+    public void setPoolTimeToWait(int poolTimeToWait) {
         this.poolTimeToWait = poolTimeToWait;
         forceCloseAll();
     }
 
-    /*
+    /**
      * The query to be used to check a connection
      *
      * @param poolPingQuery The query
      */
-    public void setPoolPingQuery( String poolPingQuery ) {
+    public void setPoolPingQuery(String poolPingQuery) {
         this.poolPingQuery = poolPingQuery;
         forceCloseAll();
     }
 
-    /*
+    /**
      * Determines if the ping query should be used.
      *
      * @param poolPingEnabled True if we need to check a connection before using it
      */
-    public void setPoolPingEnabled( boolean poolPingEnabled ) {
+    public void setPoolPingEnabled(boolean poolPingEnabled) {
         this.poolPingEnabled = poolPingEnabled;
         forceCloseAll();
     }
 
-    /*
+    /**
      * If a connection has not been used in this many milliseconds, ping the
      * database to make sure the connection is still good.
      *
      * @param milliseconds the number of milliseconds of inactivity that will trigger a ping
      */
-    public void setPoolPingConnectionsNotUsedFor( int milliseconds ) {
+    public void setPoolPingConnectionsNotUsedFor(int milliseconds) {
         this.poolPingConnectionsNotUsedFor = milliseconds;
         forceCloseAll();
     }
@@ -399,14 +381,14 @@ public class PooledDataSource implements DataSource {
         return state;
     }
 
-    private int assembleConnectionTypeCode( String url, String username, String password ) {
+    private int assembleConnectionTypeCode(String url, String username, String password) {
         return ("" + url + username + password).hashCode();
     }
 
     /**
      * 归还连接
      */
-    protected void pushConnection( PooledConnection conn ) throws SQLException {
+    protected void pushConnection(PooledConnection conn) throws SQLException {
 
         synchronized (state) {
             state.activeConnections.remove(conn);
@@ -451,7 +433,7 @@ public class PooledDataSource implements DataSource {
      * @param username 用户名
      * @param password 密码
      */
-    private PooledConnection popConnection( String username, String password ) throws SQLException {
+    private PooledConnection popConnection(String username, String password) throws SQLException {
         //是否需要等待连接标记
         boolean countedWait = false;
         //返回对象
@@ -580,13 +562,13 @@ public class PooledDataSource implements DataSource {
         return conn;
     }
 
-    /*
-     * Method to check to see if a connection is still usable
+    /**
+     * 检查连接是否可用
      *
-     * @param conn - the connection to check
-     * @return True if the connection is still usable
+     * @param conn - 被检查的连接池对象
+     * @return 如果连接对象可用返回true
      */
-    protected boolean pingConnection( PooledConnection conn ) {
+    protected boolean pingConnection(PooledConnection conn) {
         boolean result = true;
 
         try {
@@ -641,7 +623,7 @@ public class PooledDataSource implements DataSource {
      * @param conn - the pooled connection to unwrap
      * @return The 'real' connection
      */
-    public static Connection unwrapConnection( Connection conn ) {
+    public static Connection unwrapConnection(Connection conn) {
         if (Proxy.isProxyClass(conn.getClass())) {
             InvocationHandler handler = Proxy.getInvocationHandler(conn);
             if (handler instanceof PooledConnection) {
@@ -658,12 +640,12 @@ public class PooledDataSource implements DataSource {
     }
 
     @Override
-    public <T> T unwrap( Class<T> iface ) throws SQLException {
+    public <T> T unwrap(Class<T> iface) throws SQLException {
         throw new SQLException(getClass().getName() + " is not a wrapper.");
     }
 
     @Override
-    public boolean isWrapperFor( Class<?> iface ) throws SQLException {
+    public boolean isWrapperFor(Class<?> iface) throws SQLException {
         return false;
     }
 

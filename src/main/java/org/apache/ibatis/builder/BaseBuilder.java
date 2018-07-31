@@ -145,7 +145,6 @@ public abstract class BaseBuilder {
     return handler;
   }
 
-  protected Class<?> resolveAlias(String alias) {
-    return typeAliasRegistry.resolveAlias(alias);
-  }
+
+
 }
