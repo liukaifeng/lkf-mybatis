@@ -5,7 +5,7 @@
 <configuration>
 
     <!-- properties -->
-    <properties resource="jdbc.properties"/>
+    <properties resource="properties/jdbc.properties"/>
 
     <!--settings
     <settings>
@@ -26,14 +26,18 @@
 
     <!--A type alias is simply a shorter name for a Java type.-->
     <typeAliases>
-        <!--<typeAlias type="org.alien.mybatis.samples.model.Employee" alias="Employee"/>-->
-        <!--<typeAlias type="org.alien.mybatis.samples.model.Department" alias="Department"/>-->
+        <!--<typeAlias type="com.lkf.mybatis.demo.model.Employee" alias="Employee"/>-->
+        <!--<typeAlias type="com.lkf.mybatis.demo.model.Department" alias="Department"/>-->
 
         <!--That is domain.blog.Author will be registered as author. If the @Alias annotation is found its value will be
             used as an alias.@Alias("author")-->
-        <package name="org.alien.mybatis.samples.model"/>
+        <package name="com.lkf.mybatis.demo.model"/>
     </typeAliases>
-
+    <!--<plugins>-->
+        <!--<plugin interceptor="org.alien.mybatis.samples.interceptor.PageInterceptor">-->
+            <!--<property name="dialect" value="mysql"/>-->
+        <!--</plugin>-->
+    <!--</plugins>-->
     <environments default="development">
         <environment id="development">
             <transactionManager type="JDBC"/>
@@ -47,7 +51,11 @@
     </environments>
 
     <mappers>
-
-        <package name="org.alien.mybatis.samples.mapper"/>
+        <!--<mapper resource="config/mappers/Department.xml"/>-->
+        <!--<mapper resource="config/mappers/Employee.xml"/>-->
+        <!--<mapper resource="org/alien/mybatis/samples/config/Department.xml"/>-->
+        <!--<mapper class="org.alien.mybatis.samples.dao.DepartmentMapper"/>-->
+        <!-- Register all interfaces in a package as mappers -->
+        <package name="com.lkf.mybatis.demo.mapper"/>
     </mappers>
 </configuration>

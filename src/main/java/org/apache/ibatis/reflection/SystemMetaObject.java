@@ -21,7 +21,7 @@ import org.apache.ibatis.reflection.wrapper.DefaultObjectWrapperFactory;
 import org.apache.ibatis.reflection.wrapper.ObjectWrapperFactory;
 
 /**
- * @author Clinton Begin
+ * @author kaifeng
  */
 public final class SystemMetaObject {
 
