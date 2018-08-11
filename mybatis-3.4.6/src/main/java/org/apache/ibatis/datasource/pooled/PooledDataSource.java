@@ -391,37 +391,51 @@ public class PooledDataSource implements DataSource {
     protected void pushConnection(PooledConnection conn) throws SQLException {
 
         synchronized (state) {
+            //从活动连接中移除连接对象
             state.activeConnections.remove(conn);
+            //判断连接对象是否可用
             if (conn.isValid()) {
+                //空闲连接没有达到上限并且该连接对象属于当前连接池
                 if (state.idleConnections.size() < poolMaximumIdleConnections && conn.getConnectionTypeCode() == expectedConnectionTypeCode) {
+                    //累加checkoutTime
                     state.accumulatedCheckoutTime += conn.getCheckoutTime();
+                    //回滚未提交的事务
                     if (!conn.getRealConnection().getAutoCommit()) {
                         conn.getRealConnection().rollback();
                     }
+                    //创建新的连接对象
                     PooledConnection newConn = new PooledConnection(conn.getRealConnection(), this);
+                    //添加到空闲连接集合中
                     state.idleConnections.add(newConn);
+                    //创建时间戳
                     newConn.setCreatedTimestamp(conn.getCreatedTimestamp());
+                    //最后活动时间戳
                     newConn.setLastUsedTimestamp(conn.getLastUsedTimestamp());
+                    //将原有连接对象置为无效
                     conn.invalidate();
                     if (log.isDebugEnabled()) {
                         log.debug("Returned connection " + newConn.getRealHashCode() + " to pool.");
                     }
+                    //唤醒阻塞的线程
                     state.notifyAll();
                 } else {
                     state.accumulatedCheckoutTime += conn.getCheckoutTime();
                     if (!conn.getRealConnection().getAutoCommit()) {
                         conn.getRealConnection().rollback();
                     }
+                    //关闭真正的数据库连接对象
                     conn.getRealConnection().close();
                     if (log.isDebugEnabled()) {
                         log.debug("Closed connection " + conn.getRealHashCode() + ".");
                     }
+                    //将原有连接对象置为无效
                     conn.invalidate();
                 }
             } else {
                 if (log.isDebugEnabled()) {
                     log.debug("A bad connection (" + conn.getRealHashCode() + ") attempted to return to the pool, discarding connection.");
                 }
+                //统计无效连接对象的个数
                 state.badConnectionCount++;
             }
         }
